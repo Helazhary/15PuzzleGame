@@ -53,17 +53,17 @@ class Puzzle {
     // validate move (Checks input length, and bounds)
     public static boolean validTile(String move) {
         if (move.length() != 2) {
-            System.out.println("Invalid move, please enter a valid coordinate");
+            System.out.println("Invalid input, please enter a valid coordinate");
             return false;
         } else {
             char col = move.charAt(0);
             char row = move.charAt(1);
             if (!Character.isLetterOrDigit(col) || (col < 'A' || col > 'D')) {
-            System.out.println("Invalid move, please enter a valid coordinate");
+            System.out.println("Invalid input, please enter a valid coordinate");
             return false;
         }
         if (!Character.isDigit(row) || (row < '1' || row > '4')) {
-            System.out.println("Invalid move, please enter a valid coordinate");
+            System.out.println("Invalid input, please enter a valid coordinate");
             return false;
         }
             return true;
