@@ -27,12 +27,12 @@ The game board will also be shown below.
 
 - Once the game is completed, a victory message will be displayed with the number of moves it took to solve the puzzle.
 
-- A play again option will appear, but for this implementation, please re-run the program using the "Java Game" command.
+- A play again option will appear prompting the user to restart or exit (Y/N) for play again.
 
 --------------------------------------------------------------------------------------------
 				Implementation Issues:
 
-* No implementation Issues reported
+* No implementation Issues reported.
 
 --------------------------------------------------------------------------------------------
 				   Added Features:
