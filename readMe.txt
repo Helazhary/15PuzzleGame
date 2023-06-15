@@ -39,7 +39,7 @@ The game board will also be shown below.
 
 $ Simple restart option from winning screen
 
-$ Option to test a board that is 2 steps away from completion
+$ Option to test a board that is 1 step away from completion
 	- Access by typing "TESTER" in place of coordinates anytime
 
 --------------------------------------------------------------------------------------------
