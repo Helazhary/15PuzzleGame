@@ -53,18 +53,19 @@ class Puzzle {
     // validate move (Checks input length, and bounds)
     public static boolean validTile(String move) {
         if (move.length() != 2) {
+            System.out.println("Invalid move, please enter a valid coordinate");
             return false;
         } else {
             char col = move.charAt(0);
             char row = move.charAt(1);
-            if (col < 'A' || col > 'D') {
-                System.out.println("Invalid move, please enter a valid coordinate");
-                return false;
-            }
-            if (row < '1' || row > '4') {
-                System.out.println("Invalid move, please enter a valid coordinate");
-                return false;
-            }
+            if (!Character.isLetterOrDigit(col) || (col < 'A' || col > 'D')) {
+            System.out.println("Invalid move, please enter a valid coordinate");
+            return false;
+        }
+        if (!Character.isDigit(row) || (row < '1' || row > '4')) {
+            System.out.println("Invalid move, please enter a valid coordinate");
+            return false;
+        }
             return true;
 
         }
@@ -126,10 +127,11 @@ class View {
     // Welcome Message and Objective
     public static void startScreen() {
         System.out.println("Get ready to test your puzzle-solving skills with the classic 15 Puzzle!");
-        System.out.println("To play, enter the address of the tile you wish to move (e.g A1 or D4)");
-        System.out.println("Your objective is to sort the board in ascending order");
+        System.out.println("To play, enter the Coordinates of the tile you wish to move (e.g A1 or D4)");
+        System.out.println("Your objective is to sort the board in ascending order, with the blank tile in the bottom right corner");
+        System.out.println("with tile A1 being the smallest number and tile D3 the largest.");
         System.out.println("Best of luck!");
-         System.out.println();
+        System.out.println();
     }
 
     // Prints board to screen
