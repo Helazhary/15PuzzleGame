@@ -23,6 +23,7 @@ class Puzzle {
 
         // fill board
         Random rand = new Random();
+        nums = new Vector<>();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 do {
@@ -38,20 +39,21 @@ class Puzzle {
     public static boolean checkBoard(byte board[][]) {
         byte prev = board[0][0];
 
-        for (byte[] row : board) {
-            for (byte tile : row) {
-                if (tile < prev) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (board[i][j] < prev) {
                     return false;
                 }
-                prev = tile;
+                prev = board[i][j];
             }
         }
-        complete = true;
+        Puzzle.complete = true;
         return true;
     }
 
-    // validate move (Checks input length, and bounds)
+    // validate input (Checks input length, and bounds)
     public static boolean validTile(String move) {
+
         if (move.length() != 2) {
             System.out.println("Invalid input, please enter a valid coordinate");
             return false;
@@ -59,18 +61,19 @@ class Puzzle {
             char col = move.charAt(0);
             char row = move.charAt(1);
             if (!Character.isLetterOrDigit(col) || (col < 'A' || col > 'D')) {
-            System.out.println("Invalid input, please enter a valid coordinate");
-            return false;
-        }
-        if (!Character.isDigit(row) || (row < '1' || row > '4')) {
-            System.out.println("Invalid input, please enter a valid coordinate");
-            return false;
-        }
+                System.out.println("Invalid input, please enter a valid coordinate");
+                return false;
+            }
+            if (!Character.isDigit(row) || (row < '1' || row > '4')) {
+                System.out.println("Invalid input, please enter a valid coordinate");
+                return false;
+            }
             return true;
 
         }
     }
 
+    // locates blank tile and returns byte coordinates
     public static byte[] findBlank(byte[][] board) {
         byte[] blank = new byte[2];
         for (int i = 0; i < 4; i++) {
@@ -84,6 +87,7 @@ class Puzzle {
         return blank;
     }
 
+    // validate move (Checks if tile is adjacent to blank tile)
     public static boolean validMove(byte[][] board, byte[] coordinates) {
         byte[] blank = findBlank(board);
         byte rowBlank = blank[0];
@@ -108,6 +112,7 @@ class Puzzle {
         return false;
     }
 
+    // updates board with move and prints new board
     public static void updateBoard(byte[][] board, byte[] blank, byte[] coordinates) {
         byte rowBlank = blank[0];
         byte colBlank = blank[1];
@@ -118,51 +123,55 @@ class Puzzle {
         board[rowBlank][colBlank] = board[rowMove][colMove];
         board[rowMove][colMove] = temp;
 
+        // clear screen
+        System.out.print("\033[H\033[2J");
         View.printBoard(board);
     }
+
 }
 
 class View {
 
     // Welcome Message and Objective
     public static void startScreen() {
+        System.out.print("\033[H\033[2J");
         System.out.println("Get ready to test your puzzle-solving skills with the classic 15 Puzzle!");
         System.out.println("To play, enter the Coordinates of the tile you wish to move (e.g A1 or D4)");
-        System.out.println("Your objective is to sort the board in ascending order, with the blank tile in the bottom right corner");
+        System.out.println(
+                "Your objective is to sort the board in ascending order, with the blank tile in the bottom right corner");
         System.out.println("with tile A1 being the smallest number and tile D3 the largest.");
         System.out.println("Best of luck!");
         System.out.println();
     }
 
     // Prints board to screen
-  public static void printBoard(byte[][] board) {
-    char colBoard = 'A';
-    System.out.println("    1    2    3    4");
-    System.out.println("  ╔════╦════╦════╦════╗");
-    for (int i = 0; i < 4; i++) {
-        System.out.print(colBoard + " ║ ");
-        colBoard++;
-        for (int j = 0; j < 4; j++) {
-            if (board[i][j] == 16) {
-                System.out.print("   ");
-            } else {
-                if (board[i][j] < 10) {
-                    System.out.print(" ");
+    public static void printBoard(byte[][] board) {
+        char colBoard = 'A';
+        System.out.println("    1    2    3    4");
+        System.out.println("  ╔════╦════╦════╦════╗");
+        for (int i = 0; i < 4; i++) {
+            System.out.print(colBoard + " ║ ");
+            colBoard++;
+            for (int j = 0; j < 4; j++) {
+                if (board[i][j] == 16) {
+                    System.out.print("   ");
+                } else {
+                    if (board[i][j] < 10) {
+                        System.out.print(" ");
+                    }
+                    System.out.print(board[i][j] + " ");
                 }
-                System.out.print(board[i][j] + " ");
+                if (j % 4 != 3) {
+                    System.out.print("│ ");
+                }
             }
-            if (j % 4 != 3) {
-                System.out.print("│ ");
+            System.out.println("║");
+            if (i % 4 != 3) {
+                System.out.println("  ╠════╬════╬════╬════╣");
             }
         }
-        System.out.println("║");
-        if (i % 4 != 3) {
-            System.out.println("  ╠════╬════╬════╬════╣");
-        }
+        System.out.println("  ╚════╩════╩════╩════╝");
     }
-    System.out.println("  ╚════╩════╩════╩════╝");
-}
-
 
     // User input for move
     public static String getMove() {
@@ -173,10 +182,21 @@ class View {
 
     }
 
-    //Win Screen
+    // Win Screen and play again option
     public static void winScreen() {
         System.out.println("Game Completed! You solved the puzzle in only " + Puzzle.movesCount + " moves!");
         System.out.println("Would you like to play again? (Y/N)");
+
+        Scanner in = new Scanner(System.in);
+        String playAgain = in.nextLine();
+        playAgain = playAgain.toUpperCase();
+        if (playAgain.equals("Y")) {
+            Puzzle.movesCount = 0;
+            Puzzle.complete = false;
+            Ctrl.startGame();
+        } else {
+            System.out.println("Thanks for playing!");
+        }
     }
 
 }
@@ -187,10 +207,24 @@ class Ctrl {
         View.startScreen();
         Puzzle.initializeBoard();
         View.printBoard(Puzzle.board);
-        while (!Puzzle.complete) {
+        while (!Puzzle.checkBoard(Puzzle.board)) {
             String move = View.getMove();
             Puzzle.movesCount++; // increment moves counter
             move = move.toUpperCase();
+
+            ///////////////TESTER//////////////////
+            if(move.toUpperCase().equals("TESTER"))
+            {
+                 Puzzle.board = new byte[][]
+            {
+                { 1, 2, 3, 4 },
+                { 5, 6, 7, 8 },
+                { 9, 10, 16, 12 },
+                { 13, 14, 11, 15 }
+            };
+                move = "D3";
+            }
+            //////////////////////////////////////
 
             if (Puzzle.validTile(move)) {
                 // locate blank tile
@@ -211,7 +245,7 @@ class Ctrl {
         }
         // Game Over screen with movesCount
         View.winScreen();
-        
+
     }
 
 }
